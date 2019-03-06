@@ -1,0 +1,81 @@
+version: '3.3'
+services:
+  php_apache:
+    image: "vistart/php:7.2-apache"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "composer_cache:/root/.composer"
+      - "/home/vistart/web-server/www:/var/www"
+      - "/home/vistart/web-server/etc/sites-available/2.rho.im.conf:/etc/apache2/sites-available/2.rho.im.conf"
+      - "/home/vistart/web-server/www/rho.one/server.config/rho.one.conf:/etc/apache2/sites-available/rho.one.conf"
+      - "/home/vistart/web-server/www/rho.one/server.config/rho.one-ssl.conf:/etc/apache2/sites-available/rho.one-ssl.conf"
+      - "/home/vistart/web-server/etc/ssl/rho.im:/etc/apache2/ssl/rho.im"
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      - mysql_8
+      - elasticsearch
+    restart: always
+
+  mysql_8:
+    image: "mysql:8"
+    ports:
+      - "3306:3306"
+      - "33060:33060"
+    networks:
+      - backend
+    volumes:
+      - "mysql_data:/var/lib/mysql"
+      - "/home/vistart/web-server/www/rho.one/databases/2018.11:/root/databases:ro"
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max_connections=1000 --general_log=off --skip-log-bin
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+  elasticsearch:
+    image: "vistart/elasticsearch:6.6.1"
+    networks:
+      - backend
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - "elasticsearch_6_data:/usr/share/elasticsearch/data"
+    restart: always
+  redis_queue:
+    image: "redis:5"
+    networks:
+      - backend
+    ports:
+      - "6379:6379"
+    restart: always
+  mongodb_library_tongjiuniversity:
+    image: "mongo:3"
+    networks:
+      - backend
+    ports:
+      - "27017:27017"
+    volumes:
+      - "mongodb_library_tongjiuniversity:/data/db"
+      - "/home/vistart/web-server/www/rho.one/vendor/rhoone/rhoone-library-huiwen-tongjiuniversity/mongodb/config/tongjiuniversity.js:/docker-entrypoint-initdb.d/tongjiuniversity.js:ro"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongoadmin
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+      MONGO_INITDB_DATABASE: tongjiuniversity
+    depends_on:
+      - redis_queue
+    command: --ipv6
+    restart: always
+
+networks:
+  frontend:
+  backend:
+
+volumes:
+  composer_cache:
+  mysql_data:
+  elasticsearch_6_data:
+  mongodb_library_tongjiuniversity:
+ 
