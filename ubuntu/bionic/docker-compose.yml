@@ -50,6 +50,7 @@ services:
       - backend
     ports:
       - "6379:6379"
+    command: --save "" --appendonly no
     restart: always
   mongodb_library_tongjiuniversity:
     image: "mongo:3"
