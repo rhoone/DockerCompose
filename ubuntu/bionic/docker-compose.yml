@@ -35,7 +35,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 123456
   elasticsearch:
-    image: "vistart/elasticsearch:6.6.1"
+    image: "vistart/elasticsearch:6.7.0"
     networks:
       - backend
     ports:
