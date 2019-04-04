@@ -1,26 +1,5 @@
 version: '3.3'
 services:
-  php_apache:
-    image: "vistart/php:7.2-apache"
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - "composer_cache:/root/.composer/"
-      - "G:\\Volumes\\vistart\\php\\www\\html:/var/www/html"
-      - "E:\\Projects\\rho.one:/var/www/rho.one"
-      - "E:\\Projects\\rho.one\\server.config\\rho.one.conf:/etc/apache2/sites-available/rho.one.conf"
-    networks:
-      - frontend
-      - backend
-    depends_on:
-      - mysql_8
-      - redis_queue
-      - mongodb_library_tongjiuniversity
-      - kibana
-      - elasticsearch
-    restart: always
-
   mysql_8:
     image: "mysql:8"
     ports:
@@ -54,8 +33,6 @@ services:
       MONGO_INITDB_ROOT_USERNAME: mongoadmin
       MONGO_INITDB_ROOT_PASSWORD: 123456
       MONGO_INITDB_DATABASE: tongjiuniversity
-    depends_on:
-      - redis_queue
     command: --ipv6
     restart: always
   elasticsearch:
@@ -74,8 +51,6 @@ services:
       - backend
     ports:
       - "5601:5601"
-    depends_on:
-      - elasticsearch
     restart: always
   rabbitmq:
     image: "rabbitmq:management"
@@ -84,6 +59,20 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    restart: always
+  php_apache:
+    image: "vistart/php:7.2-apache"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "composer_cache:/root/.composer/"
+      - "G:\\Volumes\\vistart\\php\\www\\html:/var/www/html"
+      - "E:\\Projects\\rho.one:/var/www/rho.one"
+      - "E:\\Projects\\rho.one\\server.config\\rho.one.conf:/etc/apache2/sites-available/rho.one.conf"
+    networks:
+      - frontend
+      - backend
     restart: always
 
 networks:
