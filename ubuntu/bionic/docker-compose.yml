@@ -19,7 +19,6 @@ services:
       - mysql_8
       - elasticsearch
     restart: always
-
   mysql_8:
     image: "mysql:8"
     ports:
@@ -35,15 +34,17 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 123456
   elasticsearch:
-    image: "vistart/elasticsearch:6.7.0"
+    image: "vistart/elasticsearch:7.0.0"
     networks:
       - backend
     ports:
       - "9200:9200"
       - "9300:9300"
     volumes:
-      - "elasticsearch_6_data:/usr/share/elasticsearch/data"
+      - "elasticsearch_7_data:/usr/share/elasticsearch/data"
     restart: always
+    environment:
+      discovery.type: single-node
   redis_queue:
     image: "redis:5"
     networks:
@@ -77,6 +78,6 @@ networks:
 volumes:
   composer_cache:
   mysql_data:
-  elasticsearch_6_data:
+  elasticsearch_7_data:
   mongodb_library_tongjiuniversity:
  
