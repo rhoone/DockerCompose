@@ -34,14 +34,14 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 123456
   elasticsearch:
-    image: "vistart/elasticsearch:7.0.0"
+    image: "vistart/elasticsearch:6.7.1"
     networks:
       - backend
     ports:
       - "9200:9200"
       - "9300:9300"
     volumes:
-      - "elasticsearch_7_data:/usr/share/elasticsearch/data"
+      - "elasticsearch_6_data:/usr/share/elasticsearch/data"
     restart: always
     environment:
       discovery.type: single-node
@@ -78,6 +78,6 @@ networks:
 volumes:
   composer_cache:
   mysql_data:
-  elasticsearch_7_data:
+  elasticsearch_6_data:
   mongodb_library_tongjiuniversity:
  
